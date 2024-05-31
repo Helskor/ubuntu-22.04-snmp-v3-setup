@@ -1,0 +1,12 @@
+sudo apt update
+sudo apt install snmpd snmp libsnmp-dev
+sudo cp /etc/snmp/snmpd.conf{,.bak}
+sudo nano /etc/snmp/snmpd.conf
+  > Update location & contact info
+  > Comment out "agentaddress  127.0.0.1,[::1]"
+  > Add "agentAddress udp:161,udp6:[::1]:161"
+    >> depending on network setup replace above with "udp:161" only
+sudo systemctl stop snmpd
+sudo net-snmp-create-v3-user -ro -A AUTHPASS -a SHA -X PRIVPASS -x AES USERNAME
+sudo systemctl restart snmpd
+sudo systemctl enable snmpd
